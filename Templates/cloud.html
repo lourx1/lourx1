@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title %}Cloud - {{ session.username }}{% endblock %}
+
+{% block content %}
+<div class="cloud-container">
+    <h1>Cloud van {{ session.username }}</h1>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="flash">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Upload form -->
+    <form method="post" enctype="multipart/form-data" class="upload-form">
+        <label class="file-label">
+            Choose File
+            <input type="file" name="file" required>
+        </label>
+        <input type="submit" value="Upload" class="submit-btn">
+    </form>
+
+    {% if files %}
+    <table class="cloud-table">
+        <thead>
+            <tr>
+                <th>Preview</th>
+                <th>Filename</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <td>
+                    {% if file.lower().endswith(('.jpg','.jpeg','.png')) %}
+                    <img class="thumbnail" src="{{ url_for('download_cloud', filename=file) }}" alt="{{ file }}">
+                    {% else %}-{% endif %}
+                </td>
+                <td>{{ file }}</td>
+                <td class="actions">
+                    <a href="{{ url_for('download_cloud', filename=file) }}"><button class="download">Download</button></a>
+
+                    {% if hosted.get(file) %}
+                    <a href="{{ url_for('public_host', username=session.username, filename=file) }}" target="_blank">
+                        <button class="link">Link</button>
+                    </a>
+                    <a href="{{ url_for('unhost_file', filename=file) }}"><button class="unhost">Unhost</button></a>
+                    {% else %}
+                    <a href="{{ url_for('host_file', filename=file) }}"><button class="host">Host</button></a>
+                    {% endif %}
+
+                    <a href="{{ url_for('delete_cloud', filename=file) }}"><button class="delete">Delete</button></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No files in your cloud.</p>
+    {% endif %}
+</div>
+
+<style>
+    .cloud-container { max-width: 900px; margin: 30px auto; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 20px; }
+    .flash { background: #28a745; color: #fff; padding: 10px; margin-bottom: 15px; border-radius: 5px; }
+
+    /* Upload form */
+    .upload-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* Custom file input */
+    .file-label {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: {% if theme=='dark' %} #555 {% else %} #007bff {% endif %};
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.2s;
+    }
+    .file-label:hover {
+        background-color: {% if theme=='dark' %} #777 {% else %} #0056b3 {% endif %};
+    }
+    .file-label input[type="file"] {
+        display: none;
+    }
+
+    .submit-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #28a745;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .submit-btn:hover { background-color: #218838; }
+
+    /* Table */
+    .cloud-table { width: 100%; border-collapse: collapse; }
+    .cloud-table th, .cloud-table td { padding: 10px; text-align: center; border-bottom: 1px solid #ccc; }
+    .cloud-table th { background-color: {% if theme=='dark' %} #333 {% else %} #eee {% endif %}; }
+
+    /* Thumbnail */
+    img.thumbnail {
+        max-width: 100px;
+        max-height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    /* Buttons */
+    .actions button {
+        padding: 5px 10px;
+        margin: 2px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .actions button:hover { transform: scale(1.05); }
+
+    .download { background-color: #007bff; color: #fff; }
+    .host { background-color: #28a745; color: #fff; }
+    .unhost { background-color: #ffc107; color: #111; }
+    .link { background-color: #17a2b8; color: #fff; }
+    .delete { background-color: #dc3545; color: #fff; }
+</style>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>File Drops</h1>
+{% if files %}
+<table>
+    <tr><th>Filename</th><th>Download</th></tr>
+    {% for file in files %}
+    <tr>
+        <td>{{ file }}</td>
+        <td><a href="{{ url_for('download_file', filename=file) }}" style="color:#0f0;">Download</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No files available.</p>
+{% endif %}
+{% endblock %}

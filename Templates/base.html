@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ title if title else "Gilstalker Services" }}</title>
+<style>
+:root {
+    --bg-light: #f9f9f9;
+    --container-light: #ffffff;
+    --text-light: #222;
+    --nav-light: #ffffff;
+    --nav-text-light: #333;
+    --nav-hover-light: #e0e0e0;
+
+    --bg-dark: #1c1c1c;
+    --container-dark: #2c2c2c;
+    --text-dark: #f1f1f1;
+    --nav-dark: #2c2c2c;
+    --nav-text-dark: #f1f1f1;
+    --nav-hover-dark: #3c3c3c;
+
+    --primary: #4a90e2;
+    --primary-hover: #357ABD;
+    --border-radius: 10px;
+}
+
+body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: {% if theme=='light' %}var(--bg-light){% else %}var(--bg-dark){% endif %};
+    color: {% if theme=='light' %}var(--text-light){% else %}var(--text-dark){% endif %};
+}
+
+.navbar {
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    background: {% if theme=='light' %}var(--nav-light){% else %}var(--nav-dark){% endif %};
+    padding:15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.navbar a {
+    padding:10px 20px;
+    border-radius: var(--border-radius);
+    text-decoration:none;
+    font-weight:bold;
+    color: {% if theme=='light' %}var(--nav-text-light){% else %}var(--nav-text-dark){% endif %};
+    transition: all 0.2s ease;
+    background: transparent;
+}
+
+.navbar a:hover, .navbar a.active {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 25px;
+    background: {% if theme=='light' %}var(--container-light){% else %}var(--container-dark){% endif %};
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+input, button, select, textarea {
+    width:100%;
+    padding:10px;
+    margin:8px 0 15px;
+    border-radius: var(--border-radius);
+    border:none;
+    font-size:14px;
+}
+
+input, select, textarea {
+    background: {% if theme=='light' %}#f0f0f0{% else %}rgba(255,255,255,0.1){% endif %};
+    color: {% if theme=='light' %}#222{% else %}#fff{% endif %};
+}
+
+input:focus, select:focus, textarea:focus {
+    outline:none;
+    box-shadow: 0 0 5px var(--primary);
+}
+
+button {
+    background: var(--primary);
+    color:#fff;
+    cursor:pointer;
+    font-weight:bold;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.result {
+    padding:10px;
+    border-radius: var(--border-radius);
+    background: {% if theme=='light' %}#e0e0e0{% else %}rgba(255,255,255,0.1){% endif %};
+    margin-top:15px;
+}
+
+footer {
+    margin-top:30px;
+    text-align:center;
+    font-size:12px;
+    color: {% if theme=='light' %}#666{% else %}#aaa{% endif %};
+}
+footer a { color: {% if theme=='light' %}#333{% else %}#fff{% endif %}; text-decoration: underline; }
+footer a:hover { color: var(--primary); }
+
+table { width:100%; border-collapse: collapse; }
+th, td { padding:10px; text-align:left; border-bottom:1px solid rgba(0,0,0,0.1); }
+th { background: var(--primary); color: #fff; }
+
+textarea { min-height:300px; resize:vertical; }
+</style>
+</head>
+<body>
+
+{% if session.logged_in %}
+<div class="navbar">
+    <a href="{{ url_for('home') }}" class="{% if request.path=='/home' %}active{% endif %}">Home</a>
+    <a href="{{ url_for('lookup') }}" class="{% if request.path=='/lookup' %}active{% endif %}">Lookup</a>
+    <a href="{{ url_for('drops') }}" class="{% if request.path=='/drops' %}active{% endif %}">File Drops</a>
+    <a href="{{ url_for('notes') }}" class="{% if request.path=='/notes' %}active{% endif %}">Notes</a>
+    <a href="{{ url_for('cloud') }}" class="{% if request.path=='/cloud' %}active{% endif %}">Cloud</a>
+    <a href="{{ url_for('settings') }}" class="{% if request.path=='/settings' %}active{% endif %}">Settings</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+{% endif %}
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+<footer>
+    <p>developed by <a href="#">gilstalker</a></p>
+</footer>
+</body>
+</html>

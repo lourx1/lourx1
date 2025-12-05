@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>dutch ip lookup (currently outdated working on new databases)</h1>
+<form method="post" action="/lookup">
+    <label for="searchInput">Search by Discord ID / xboxlive / username / steamid</label>
+    <input type="text" name="searchInput" id="searchInput" placeholder="Enter search term..." required>
+    <button type="submit">Search</button>
+</form>
+{% if message %}
+<div class="result">{{ message }}</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Settings</h1>
+<form method="post" action="/settings">
+    <h3>Change Password</h3>
+    <input type="password" name="current_password" placeholder="Current Password">
+    <input type="password" name="new_password" placeholder="New Password">
+    <input type="password" name="confirm_password" placeholder="Confirm New Password">
+    <button type="submit">Update Password</button>
+
+    <h3>Theme</h3>
+    <select name="theme">
+        <option value="light" {% if theme=='light' %}selected{% endif %}>Light</option>
+        <option value="dark" {% if theme=='dark' %}selected{% endif %}>Dark</option>
+    </select>
+    <button type="submit">Update Theme</button>
+</form>
+{% if message %}
+<div class="result">{{ message }}</div>
+{% endif %}
+{% endblock %}

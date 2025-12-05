@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>notes</h1>
+<form method="post" action="/notes">
+<textarea name="notes" rows="15">{{ notes }}</textarea>
+<button type="submit">save</button>
+</form>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="result">{{ messages[0] }}</div>
+  {% endif %}
+{% endwith %}
+{% endblock %}
